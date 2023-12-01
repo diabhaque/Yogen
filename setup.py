@@ -6,5 +6,5 @@ setup(
     description="Japan Real Estate Data Science",
     author="Diab Haque",
     author_email="diabhaque@gmail.com",
-    packages=["japan_re"],
+    packages=["jre_utils"],
 )
