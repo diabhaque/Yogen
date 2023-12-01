@@ -22,6 +22,6 @@ area_levels = {
 }
 
 period_cols = {
-    "yearly": "Year",
-    "quarterly": "Date",
+    "yearly": "year",
+    "quarterly": "date",
 }
