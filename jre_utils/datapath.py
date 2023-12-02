@@ -71,6 +71,10 @@ factor_data_paths = {
     },
 }
 
+model_ready_data_paths = {
+    "xgb": f"{DATA_DIRECTORY_PATH}/model_ready/xgb.csv",
+}
+
 
 def get_derived_csv_path(period, area_level, asset_type, statistic):
     filename = f"{period}_{area_level}_{asset_type}_{statistic}.csv"
