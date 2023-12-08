@@ -1,24 +1,25 @@
 asset_types = {
     "land": {
         "label": "Residential Land(Land Only)",
-        "metric": "UnitPrice",
-        "metric_pct_chg": "UnitPricePctChg",
+        "metric": "unit_price",
+        "metric_pct_chg": "unit_price_pct_chg",
     },
     "building": {
         "label": "Residential Land(Land and Building)",
-        "metric": "TradePricePerArea",
-        "metric_pct_chg": "TradePricePctChg",
+        "metric": "unit_price",
+        "metric_pct_chg": "unit_price_pct_chg",
     },
 }
 
 statistics = {
-    "mean": {"TradePricePerArea": "mean", "UnitPrice": "mean", "Count": "count"},
-    "median": {"TradePricePerArea": "median", "UnitPrice": "median", "Count": "count"},
+    # should be weight average of unit price where weights are the areas
+    "mean": {"unit_price": "mean", "count": "count"},
+    "median": {"unit_price": "median", "count": "count"},
+    "weighted_mean": {"unit_price": "mean", "count": "count"},
 }
 
 area_levels = {
-    "prefecture": {"columns": ["Prefecture"]},
-    "municipality": {"columns": ["Prefecture", "Municipality"]},
+    "area_code": {"columns": ["area", "area_code"]},
 }
 
 period_cols = {

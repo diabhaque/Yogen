@@ -1,5 +1,6 @@
 DATA_DIRECTORY_PATH = "../../data"
 DERIVED_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived"
+DERIVED_DATA_PATH_LEGACY = f"{DATA_DIRECTORY_PATH}/derived_legacy"
 
 factor_data_paths = {
     "unprocessed": {
@@ -76,6 +77,11 @@ model_ready_data_paths = {
 }
 
 
-def get_derived_csv_path(period, area_level, asset_type, statistic):
-    filename = f"{period}_{area_level}_{asset_type}_{statistic}.csv"
+def get_derived_csv_path_legacy(asset_type):
+    filename = f"{asset_type}.csv"
+    return f"{DERIVED_DATA_PATH_LEGACY}/{filename}"
+
+
+def get_derived_csv_path(asset_type):
+    filename = f"{asset_type}.csv"
     return f"{DERIVED_DATA_PATH}/{filename}"
