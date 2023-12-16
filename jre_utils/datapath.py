@@ -1,5 +1,7 @@
 DATA_DIRECTORY_PATH = "../../data"
 DERIVED_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived"
+DERIVED_DATA_PATH_LPA = f"{DATA_DIRECTORY_PATH}/derived_lpa"
+DERIVED_DATA_PATH_PLPS = f"{DATA_DIRECTORY_PATH}/derived_plps"
 DERIVED_DATA_PATH_LEGACY = f"{DATA_DIRECTORY_PATH}/derived_legacy"
 
 factor_data_paths = {
@@ -74,6 +76,7 @@ factor_data_paths = {
 
 model_ready_data_paths = {
     "xgb": f"{DATA_DIRECTORY_PATH}/model_ready/xgb.csv",
+    "sequence": f"{DATA_DIRECTORY_PATH}/model_ready/sequence.csv",
 }
 
 
@@ -85,3 +88,13 @@ def get_derived_csv_path_legacy(asset_type):
 def get_derived_csv_path(asset_type):
     filename = f"{asset_type}.csv"
     return f"{DERIVED_DATA_PATH}/{filename}"
+
+
+def get_derived_plps_path():
+    filename = f"combined.csv"
+    return f"{DERIVED_DATA_PATH_PLPS}/{filename}"
+
+
+def get_derived_lpa_path():
+    filename = f"combined.csv"
+    return f"{DERIVED_DATA_PATH_LPA}/{filename}"
