@@ -75,8 +75,12 @@ factor_data_paths = {
 }
 
 model_ready_data_paths = {
-    "xgb": f"{DATA_DIRECTORY_PATH}/model_ready/xgb.csv",
-    "sequence": f"{DATA_DIRECTORY_PATH}/model_ready/sequence.csv",
+    "xgb_transactions": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions.csv",
+    "sequence_transactions": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions.csv",
+    "xgb_plps": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps.csv",
+    "sequence_plps": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps.csv",
+    "xgb_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa.csv",
+    "sequence_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa.csv",
 }
 
 
