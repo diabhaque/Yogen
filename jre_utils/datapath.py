@@ -1,8 +1,12 @@
 DATA_DIRECTORY_PATH = "../../data"
-DERIVED_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived"
-DERIVED_DATA_PATH_LPA = f"{DATA_DIRECTORY_PATH}/derived_lpa"
-DERIVED_DATA_PATH_PLPS = f"{DATA_DIRECTORY_PATH}/derived_plps"
-DERIVED_DATA_PATH_LEGACY = f"{DATA_DIRECTORY_PATH}/derived_legacy"
+
+PRETRAINING_DATA_PATH = f"{DATA_DIRECTORY_PATH}/pretraining"
+
+DERIVED_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived/transactions"
+DERIVED_DATA_PATH_LPA = f"{DATA_DIRECTORY_PATH}/derived/lpa"
+DERIVED_DATA_PATH_PLPS = f"{DATA_DIRECTORY_PATH}/derived/plps"
+DERIVED_DATA_PATH_LEGACY = f"{DATA_DIRECTORY_PATH}/derived/legacy"
+
 
 factor_data_paths = {
     "unprocessed": {
@@ -81,6 +85,10 @@ model_ready_data_paths = {
     "sequence_plps": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps.csv",
     "xgb_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa.csv",
     "sequence_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa.csv",
+}
+
+pretraining_data_paths = {
+    "jena_climate": f"{PRETRAINING_DATA_PATH}/jena_climate/jena_climate_2009_2016.csv",
 }
 
 
