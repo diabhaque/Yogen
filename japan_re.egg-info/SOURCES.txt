@@ -5,6 +5,10 @@ japan_re.egg-info/dependency_links.txt
 japan_re.egg-info/top_level.txt
 jre_utils/config.py
 jre_utils/constants.py
+jre_utils/data.py
 jre_utils/datapath.py
+jre_utils/engine.py
+jre_utils/metrics.py
+jre_utils/models.py
 jre_utils/process.py
 jre_utils/visualize.py

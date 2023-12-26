@@ -1,4 +1,5 @@
 DATA_DIRECTORY_PATH = "../../data"
+WEIGHTS_DIRECTORY_PATH = "../../weights"
 
 PRETRAINING_DATA_PATH = f"{DATA_DIRECTORY_PATH}/pretraining"
 
@@ -89,6 +90,42 @@ model_ready_data_paths = {
 
 pretraining_data_paths = {
     "jena_climate": f"{PRETRAINING_DATA_PATH}/jena_climate/jena_climate_2009_2016.csv",
+    "etth1": f"{PRETRAINING_DATA_PATH}/ett_small/etth1.csv",
+    "etth2": f"{PRETRAINING_DATA_PATH}/ett_small/etth2.csv",
+    "exchange_rate": f"{PRETRAINING_DATA_PATH}/exchange_rate/exchange_rate.csv",
+}
+
+processed_pretraining_data_paths = {
+    "jena_climate": {
+        "train": f"{PRETRAINING_DATA_PATH}/jena_climate/train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/jena_climate/eval.csv",
+    },
+    "etth1": {
+        "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_eval.csv",
+    },
+    "etth2": {
+        "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_eval.csv",
+    },
+    "national_illness": {
+        "train": f"{PRETRAINING_DATA_PATH}/illness/train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/illness/eval.csv",
+    },
+    
+    "exchange_rate": {
+        "train": f"{PRETRAINING_DATA_PATH}/exchange_rate/train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/exchange_rate/eval.csv",
+    },
+    "electricity": f"{PRETRAINING_DATA_PATH}/electricity/electricity.csv",
+}
+
+pretrained_weights_paths = {
+    "jena_climate": f"{WEIGHTS_DIRECTORY_PATH}/jena_climate.pt",
+    "etth1": f"{WEIGHTS_DIRECTORY_PATH}/etth1.pt",
+    "etth2": f"{WEIGHTS_DIRECTORY_PATH}/etth2.pt",
+    "national_illness": f"{WEIGHTS_DIRECTORY_PATH}/national_illness.pt",
+    "all": f"{WEIGHTS_DIRECTORY_PATH}/all.pt",
 }
 
 
