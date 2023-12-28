@@ -92,28 +92,48 @@ pretraining_data_paths = {
     "jena_climate": f"{PRETRAINING_DATA_PATH}/jena_climate/jena_climate_2009_2016.csv",
     "etth1": f"{PRETRAINING_DATA_PATH}/ett_small/etth1.csv",
     "etth2": f"{PRETRAINING_DATA_PATH}/ett_small/etth2.csv",
+    "ettm1": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1.csv",
+    "ettm2": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2.csv",
+    "illness": f"{PRETRAINING_DATA_PATH}/illness/national_illness.csv",
+    "psm": f"{PRETRAINING_DATA_PATH}/psm", # incomplete
+    "swat": f"{PRETRAINING_DATA_PATH}/swat/swat2.csv",
     "exchange_rate": f"{PRETRAINING_DATA_PATH}/exchange_rate/exchange_rate.csv",
 }
 
 processed_pretraining_data_paths = {
-    "jena_climate": {
+    "jena_climate": { # Done
         "train": f"{PRETRAINING_DATA_PATH}/jena_climate/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/jena_climate/eval.csv",
     },
-    "etth1": {
+    "etth1": { # Done
         "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_eval.csv",
     },
-    "etth2": {
+    "etth2": { # Done
         "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_eval.csv",
     },
-    "national_illness": {
+    "ettm1": {
+        "train": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1_train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1_eval.csv",
+    },
+    "ettm2": {
+        "train": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2_train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2_eval.csv",
+    },
+    "illness": {
         "train": f"{PRETRAINING_DATA_PATH}/illness/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/illness/eval.csv",
     },
-    
-    "exchange_rate": {
+    "psm": {
+        "train": f"{PRETRAINING_DATA_PATH}/psm/train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/psm/eval.csv",
+    },
+    "swat": {
+        "train": f"{PRETRAINING_DATA_PATH}/swat/train.csv",
+        "eval": f"{PRETRAINING_DATA_PATH}/swat/eval.csv",
+    },
+    "exchange_rate": { # Done
         "train": f"{PRETRAINING_DATA_PATH}/exchange_rate/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/exchange_rate/eval.csv",
     },
