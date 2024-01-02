@@ -61,6 +61,60 @@ class JapanRETimeSeriesDataset(Dataset):
 
         return sample
 
+class SKTimeSeriesDataset(Dataset):
+    def __init__(
+        self,
+        complete_df,
+        df,
+        metrics,
+        weight_column=None,
+        feature_columns=None,
+        shift=1,
+        window_length=5,
+        transform=None,
+    ):
+        self.feature_columns = (
+            feature_columns if feature_columns is not None else df.columns
+        )
+        self.complete_df = complete_df
+        self.df = df
+        self.transform = transform
+        self.metrics = metrics
+        self.weight_column = weight_column
+        self.shift = shift
+        self.window_length = window_length
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        row = self.df.iloc[idx]
+        target = row[self.metrics]
+        id, time_idx = row["id"], row["time_idx"]
+        window = (
+            self.complete_df[
+                (self.complete_df["id"] == id)
+                & (self.complete_df["time_idx"] <= time_idx - self.shift)
+            ]
+            .sort_values(by="time_idx")
+            .tail(self.window_length)
+        )
+
+        sample = {
+            "window": window[self.feature_columns],
+            "target": target,
+            "weight": row[[self.weight_column]]
+            if self.weight_column is not None
+            else pd.Series({self.weight_column: 1.0}),
+        }
+
+        if self.transform:
+            sample = self.transform(sample)
+
+        return sample
 
 class TimeSeriesDataset(Dataset):
     def __init__(
