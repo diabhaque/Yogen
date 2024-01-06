@@ -13,7 +13,7 @@ def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device=
     mse_loss_weighted = MSELossWeighted().to(device)
 
     for batch in dataloader:
-        batch = {k: v.to(device) for k, v in batch.items()}
+        batch = {k: v.to(device) for k, v in batch.items()} # may be faster to move whole dataloader to device at once
 
         outputs = model(batch["window"], batch["mask"])
         loss = mse_loss_weighted(outputs, batch["target"], batch["weight"])

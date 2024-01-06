@@ -81,11 +81,41 @@ factor_data_paths = {
 
 model_ready_data_paths = {
     "xgb_transactions": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions.csv",
+    "xgb_transactions_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "xgb_transactions_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "xgb_transactions_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "xgb_transactions_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+
     "sequence_transactions": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions.csv",
+    "sequence_transactions_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "sequence_transactions_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "sequence_transactions_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "sequence_transactions_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+
     "xgb_plps": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps.csv",
+    "xgb_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "xgb_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "xgb_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "xgb_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+    
     "sequence_plps": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps.csv",
+    "sequence_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "sequence_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "sequence_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "sequence_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+    
     "xgb_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa.csv",
+    "xgb_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "xgb_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "xgb_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "xgb_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+    
     "sequence_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa.csv",
+    "sequence_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
+    "sequence_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
+    "sequence_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
+    "sequence_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
+
 }
 
 pretraining_data_paths = {
