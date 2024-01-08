@@ -8,6 +8,7 @@ import torch
 #     def forward(self, inputs, targets, weights):
 #         return (((inputs - targets) ** 2) * weights).mean()
 
+
 class MSELossWeighted(torch.nn.Module):
     def __init__(self):
         super(MSELossWeighted, self).__init__()
@@ -26,10 +27,10 @@ class MSELossWeighted(torch.nn.Module):
         """
         # Ensure that the weight tensor is broadcastable to the input and target tensors
         weight = weight.view(-1, 1).expand_as(input)
-        
+
         # Calculate the element-wise squared error
         squared_error = (input - target) ** 2
-        
+
         # Apply the weights, sum, and then take the mean
         weighted_squared_error = weight * squared_error
         loss = weighted_squared_error.mean()

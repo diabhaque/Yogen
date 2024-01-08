@@ -39,6 +39,10 @@ factor_data_paths = {
             "prefecture": "",
             "municipality": f"{DATA_DIRECTORY_PATH}/municipality/unprocessed/dwelling/existing_dwellings_2003_2018.csv",
         },
+        "lfs_revenue_breakdown": {
+            "prefecture": "",
+            "municipality": f"{DATA_DIRECTORY_PATH}/municipality/unprocessed/lfs_revenue_breakdown/combined_1989_2022.csv",
+        },
     },
     "processed": {
         "population": {
@@ -76,6 +80,11 @@ factor_data_paths = {
             "municipality": f"{DATA_DIRECTORY_PATH}/municipality/processed/dwelling/existing_dwellings_2003_2018.csv",
             "submunicipality": f"{DATA_DIRECTORY_PATH}/submunicipality/processed/dwelling/existing_dwellings_2003_2018.csv",
         },
+        "lfs_revenue_breakdown": {
+            "prefecture": "",
+            "municipality": f"{DATA_DIRECTORY_PATH}/municipality/processed/lfs_revenue_breakdown/combined_1989_2022.csv",
+            "submunicipality": f"{DATA_DIRECTORY_PATH}/municipality/processed/lfs_revenue_breakdown/combined_1989_2022.csv",
+        },
     },
 }
 
@@ -85,37 +94,31 @@ model_ready_data_paths = {
     "xgb_transactions_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
     "xgb_transactions_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
     "xgb_transactions_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-
     "sequence_transactions": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions.csv",
-    "sequence_transactions_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
-    "sequence_transactions_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
-    "sequence_transactions_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
-    "sequence_transactions_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-
+    "sequence_transactions_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_mean.csv",
+    "sequence_transactions_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_median.csv",
+    "sequence_transactions_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_mean.csv",
+    "sequence_transactions_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_median.csv",
     "xgb_plps": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps.csv",
-    "xgb_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
-    "xgb_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
-    "xgb_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
-    "xgb_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-    
+    "xgb_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps_weighted_mean.csv",
+    "xgb_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps_weighted_median.csv",
+    "xgb_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps_mean.csv",
+    "xgb_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_plps_median.csv",
     "sequence_plps": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps.csv",
-    "sequence_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
-    "sequence_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
-    "sequence_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
-    "sequence_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-    
+    "sequence_plps_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_mean.csv",
+    "sequence_plps_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_median.csv",
+    "sequence_plps_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_mean.csv",
+    "sequence_plps_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_median.csv",
     "xgb_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa.csv",
-    "xgb_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
-    "xgb_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
-    "xgb_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
-    "xgb_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-    
+    "xgb_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa_weighted_mean.csv",
+    "xgb_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa_weighted_median.csv",
+    "xgb_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa_mean.csv",
+    "xgb_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_lpa_median.csv",
     "sequence_lpa": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa.csv",
-    "sequence_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_mean.csv",
-    "sequence_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_weighted_median.csv",
-    "sequence_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_mean.csv",
-    "sequence_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/xgb_transactions_median.csv",
-
+    "sequence_lpa_weighted_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_mean.csv",
+    "sequence_lpa_weighted_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_median.csv",
+    "sequence_lpa_mean": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_mean.csv",
+    "sequence_lpa_median": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_median.csv",
 }
 
 pretraining_data_paths = {
@@ -125,21 +128,21 @@ pretraining_data_paths = {
     "ettm1": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1.csv",
     "ettm2": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2.csv",
     "illness": f"{PRETRAINING_DATA_PATH}/illness/national_illness.csv",
-    "psm": f"{PRETRAINING_DATA_PATH}/psm", # incomplete
+    "psm": f"{PRETRAINING_DATA_PATH}/psm",  # incomplete
     "swat": f"{PRETRAINING_DATA_PATH}/swat/swat2.csv",
     "exchange_rate": f"{PRETRAINING_DATA_PATH}/exchange_rate/exchange_rate.csv",
 }
 
 processed_pretraining_data_paths = {
-    "jena_climate": { # Done
+    "jena_climate": {  # Done
         "train": f"{PRETRAINING_DATA_PATH}/jena_climate/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/jena_climate/eval.csv",
     },
-    "etth1": { # Done
+    "etth1": {  # Done
         "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_eval.csv",
     },
-    "etth2": { # Done
+    "etth2": {  # Done
         "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_eval.csv",
     },
@@ -163,7 +166,7 @@ processed_pretraining_data_paths = {
         "train": f"{PRETRAINING_DATA_PATH}/swat/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/swat/eval.csv",
     },
-    "exchange_rate": { # Done
+    "exchange_rate": {  # Done
         "train": f"{PRETRAINING_DATA_PATH}/exchange_rate/train.csv",
         "eval": f"{PRETRAINING_DATA_PATH}/exchange_rate/eval.csv",
     },

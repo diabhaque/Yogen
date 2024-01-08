@@ -48,9 +48,9 @@ class JapanRETimeSeriesDataset(Dataset):
         )
 
         sample = {
-            "window": area_df[self.feature_columns],
-            "target": target,
-            "weight": row[[self.weight_column]]
+            "window": area_df[self.feature_columns].astype(float),
+            "target": target.astype(float),
+            "weight": row[[self.weight_column]].astype(float)
             if self.weight_column is not None
             else pd.Series({self.weight_column: 1.0}),
             # "area_code": area_code,
