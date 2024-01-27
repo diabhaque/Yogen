@@ -5,7 +5,9 @@ from torcheval.metrics import R2Score
 from jre_utils.metrics import MSELossWeighted
 
 
-def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"):
+def train_weighted(
+    model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"
+):
     model.train()
 
     running_loss = 0.0
@@ -13,7 +15,9 @@ def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device=
     mse_loss_weighted = MSELossWeighted().to(device)
 
     for batch in dataloader:
-        batch = {k: v.to(device) for k, v in batch.items()} # may be faster to move whole dataloader to device at once
+        batch = {
+            k: v.to(device) for k, v in batch.items()
+        }  # may be faster to move whole dataloader to device at once
 
         outputs = model(batch["window"], batch["mask"])
         loss = mse_loss_weighted(outputs, batch["target"], batch["weight"])
@@ -32,7 +36,7 @@ def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device=
     return running_loss / len(dataloader), r2_score.compute().item()
 
 
-def evaluate(model, dataloader, device="cpu"):
+def evaluate_weighted(model, dataloader, device="cpu"):
     model.eval()
 
     running_loss = 0.0
@@ -52,9 +56,7 @@ def evaluate(model, dataloader, device="cpu"):
     return running_loss / len(dataloader), r2_score.compute().item()
 
 
-def train_weightless(
-    model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"
-):
+def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"):
     model.train()
 
     running_loss = 0.0
@@ -81,7 +83,7 @@ def train_weightless(
     return running_loss / len(dataloader), r2_score.compute().item()
 
 
-def evaluate_weightless(model, dataloader, device="cpu"):
+def evaluate(model, dataloader, device="cpu"):
     model.eval()
 
     running_loss = 0.0

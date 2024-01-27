@@ -1,6 +1,4 @@
-import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
 
 
 def plot_time_series(
@@ -13,6 +11,8 @@ def plot_time_series(
     width=1600,
     height=800,
     showlegend=True,
+    highlight=False,
+    highlight_range=("2020", "2022"),
 ):
     plot_df = df.set_index(group_by_columns)
     plot_df = plot_df[column].unstack(list(range(len(granularity_columns))))
@@ -28,4 +28,14 @@ def plot_time_series(
         hovermode="closest",
         showlegend=showlegend,
     )
+    if highlight:
+        fig.add_vrect(
+            x0=highlight_range[0],
+            x1=highlight_range[1],
+            fillcolor="LightSalmon",
+            opacity=0.5,
+            layer="below",
+            line_width=0,
+        )
+
     fig.show()

@@ -19,6 +19,12 @@ def get_cumulative_growth(df, column):
     return df.groupby("area_code")["multiplier"].cumprod()
 
 
+def get_cumulative_growth_from_base(df, column):
+    df = df.sort_values(by=["year", "area_code"], ascending=[True, True])
+    df[f"{column}_yoy_growth"] = df.groupby("area_code")[column].pct_change(periods=1)
+    return get_cumulative_growth(df, f"{column}_yoy_growth")
+
+
 def get_highest_growth_municipalities(
     df, column, cumulative_column, end_year, n=10, keep=[]
 ):
