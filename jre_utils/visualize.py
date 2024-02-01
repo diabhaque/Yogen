@@ -1,4 +1,6 @@
 import plotly.express as px
+import matplotlib.pyplot as plt
+from sklearn.metrics import PredictionErrorDisplay
 
 
 def plot_time_series(
@@ -39,3 +41,16 @@ def plot_time_series(
         )
 
     fig.show()
+
+
+def plot_prediction_error_display(y, y_pred):
+    _, ax = plt.subplots(figsize=(5, 5))
+    display = PredictionErrorDisplay.from_predictions(
+        y,
+        y_pred,
+        kind="actual_vs_predicted",
+        ax=ax,
+        scatter_kwargs={"alpha": 0.5},
+    )
+    ax.set_title("Actual vs Predicted")
+    plt.tight_layout()

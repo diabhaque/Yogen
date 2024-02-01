@@ -1,8 +1,56 @@
 import torch
-from torch.nn import MSELoss
 from torcheval.metrics import R2Score
 
+from torch.nn import MSELoss
 from jre_utils.metrics import MSELossWeighted
+from robust_loss_pytorch import AdaptiveLossFunction
+
+
+def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"):
+    model.train()
+
+    running_loss = 0.0
+    r2_score = R2Score(device=device)
+    mse_loss = MSELoss().to(device)
+
+    for batch in dataloader:
+        batch = {k: v.to(device) for k, v in batch.items()}
+
+        outputs = model(batch["window"], batch["mask"])
+        loss = mse_loss(outputs, batch["target"])
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        lr_scheduler.step()
+
+        running_loss += loss.item() * len(batch)
+        r2_score.update(outputs, batch["target"])
+
+        if progress_bar is not None:
+            progress_bar.update(1)
+
+    return running_loss / len(dataloader), r2_score.compute().item()
+
+
+def evaluate(model, dataloader, device="cpu"):
+    model.eval()
+
+    running_loss = 0.0
+    r2_score = R2Score(device=device)
+    mse_loss = MSELoss().to(device)
+
+    with torch.no_grad():
+        for batch in dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+
+            outputs = model(batch["window"], batch["mask"])
+            loss = mse_loss(outputs, batch["target"])
+
+            running_loss += loss.item() * len(batch)
+            r2_score.update(outputs, batch["target"])
+
+    return running_loss / len(dataloader), r2_score.compute().item()
 
 
 def train_weighted(
@@ -49,53 +97,6 @@ def evaluate_weighted(model, dataloader, device="cpu"):
 
             outputs = model(batch["window"], batch["mask"])
             loss = mse_loss_weighted(outputs, batch["target"], batch["weight"])
-
-            running_loss += loss.item() * len(batch)
-            r2_score.update(outputs, batch["target"])
-
-    return running_loss / len(dataloader), r2_score.compute().item()
-
-
-def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"):
-    model.train()
-
-    running_loss = 0.0
-    r2_score = R2Score(device=device)
-    mse_loss = MSELoss().to(device)
-
-    for batch in dataloader:
-        batch = {k: v.to(device) for k, v in batch.items()}
-
-        outputs = model(batch["window"], batch["mask"])
-        loss = mse_loss(outputs, batch["target"])
-
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        lr_scheduler.step()
-
-        running_loss += loss.item() * len(batch)
-        r2_score.update(outputs, batch["target"])
-
-        if progress_bar is not None:
-            progress_bar.update(1)
-
-    return running_loss / len(dataloader), r2_score.compute().item()
-
-
-def evaluate(model, dataloader, device="cpu"):
-    model.eval()
-
-    running_loss = 0.0
-    r2_score = R2Score(device=device)
-    mse_loss = MSELoss().to(device)
-
-    with torch.no_grad():
-        for batch in dataloader:
-            batch = {k: v.to(device) for k, v in batch.items()}
-
-            outputs = model(batch["window"], batch["mask"])
-            loss = mse_loss(outputs, batch["target"])
 
             running_loss += loss.item() * len(batch)
             r2_score.update(outputs, batch["target"])

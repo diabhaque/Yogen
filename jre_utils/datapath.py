@@ -88,95 +88,41 @@ factor_data_paths = {
     },
 }
 
-model_ready_data_paths = {
-    "sequence_transactions_weighted_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_mean_smoothed_1.csv",
-    "sequence_transactions_weighted_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_median_smoothed_1.csv",
-    "sequence_transactions_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_mean_smoothed_1.csv",
-    "sequence_transactions_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_median_smoothed_1.csv",
-    "sequence_plps_weighted_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_mean_smoothed_1.csv",
-    "sequence_plps_weighted_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_median_smoothed_1.csv",
-    "sequence_plps_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_mean_smoothed_1.csv",
-    "sequence_plps_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_median_smoothed_1.csv",
-    "sequence_lpa_weighted_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_mean_smoothed_1.csv",
-    "sequence_lpa_weighted_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_median_smoothed_1.csv",
-    "sequence_lpa_mean_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_mean_smoothed_1.csv",
-    "sequence_lpa_median_smoothed_1": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_median_smoothed_1.csv",
-    "sequence_transactions_weighted_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_mean_smoothed_2.csv",
-    "sequence_transactions_weighted_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_weighted_median_smoothed_2.csv",
-    "sequence_transactions_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_mean_smoothed_2.csv",
-    "sequence_transactions_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_transactions_median_smoothed_2.csv",
-    "sequence_plps_weighted_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_mean_smoothed_2.csv",
-    "sequence_plps_weighted_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_weighted_median_smoothed_2.csv",
-    "sequence_plps_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_mean_smoothed_2.csv",
-    "sequence_plps_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_plps_median_smoothed_2.csv",
-    "sequence_lpa_weighted_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_mean_smoothed_2.csv",
-    "sequence_lpa_weighted_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_weighted_median_smoothed_2.csv",
-    "sequence_lpa_mean_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_mean_smoothed_2.csv",
-    "sequence_lpa_median_smoothed_2": f"{DATA_DIRECTORY_PATH}/model_ready/sequence_lpa_median_smoothed_2.csv",
+dataset_types = ["transactions"]
+metrics = ["median_smoothed", "weighted_median_smoothed"]
+years_ahead = [1, 2]
+
+model_built_data_paths = {
+    key: f"{DATA_DIRECTORY_PATH}/model_built/{key}.csv"
+    for key in [
+        f"sequence_{dataset_type}_{metric}_{year_ahead}"
+        for dataset_type in dataset_types
+        for metric in metrics
+        for year_ahead in years_ahead
+    ]
 }
+
+model_ready_data_paths = {
+    key: f"{DATA_DIRECTORY_PATH}/model_ready/{key}.csv"
+    for key in [
+        f"sequence_{dataset_type}_{metric}_{year_ahead}"
+        for dataset_type in dataset_types
+        for metric in metrics
+        for year_ahead in years_ahead
+    ]
+}
+
+eval_years = [2020, 2021]
 
 model_output_data_paths = {
-    "sequence_transactions_weighted_median_smoothed_2_2020": f"{DATA_DIRECTORY_PATH}/model_output/sequence_transactions_weighted_median_smoothed_2_2020.csv",
-}
-
-pretraining_data_paths = {
-    "jena_climate": f"{PRETRAINING_DATA_PATH}/jena_climate/jena_climate_2009_2016.csv",
-    "etth1": f"{PRETRAINING_DATA_PATH}/ett_small/etth1.csv",
-    "etth2": f"{PRETRAINING_DATA_PATH}/ett_small/etth2.csv",
-    "ettm1": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1.csv",
-    "ettm2": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2.csv",
-    "illness": f"{PRETRAINING_DATA_PATH}/illness/national_illness.csv",
-    "psm": f"{PRETRAINING_DATA_PATH}/psm",  # incomplete
-    "swat": f"{PRETRAINING_DATA_PATH}/swat/swat2.csv",
-    "exchange_rate": f"{PRETRAINING_DATA_PATH}/exchange_rate/exchange_rate.csv",
-}
-
-processed_pretraining_data_paths = {
-    "jena_climate": {  # Done
-        "train": f"{PRETRAINING_DATA_PATH}/jena_climate/train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/jena_climate/eval.csv",
-    },
-    "etth1": {  # Done
-        "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth1_eval.csv",
-    },
-    "etth2": {  # Done
-        "train": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/etth2_eval.csv",
-    },
-    "ettm1": {
-        "train": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1_train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/ettm1_eval.csv",
-    },
-    "ettm2": {
-        "train": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2_train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/ett_small/ettm2_eval.csv",
-    },
-    "illness": {
-        "train": f"{PRETRAINING_DATA_PATH}/illness/train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/illness/eval.csv",
-    },
-    "psm": {
-        "train": f"{PRETRAINING_DATA_PATH}/psm/train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/psm/eval.csv",
-    },
-    "swat": {
-        "train": f"{PRETRAINING_DATA_PATH}/swat/train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/swat/eval.csv",
-    },
-    "exchange_rate": {  # Done
-        "train": f"{PRETRAINING_DATA_PATH}/exchange_rate/train.csv",
-        "eval": f"{PRETRAINING_DATA_PATH}/exchange_rate/eval.csv",
-    },
-    "electricity": f"{PRETRAINING_DATA_PATH}/electricity/electricity.csv",
-}
-
-pretrained_weights_paths = {
-    "jena_climate": f"{WEIGHTS_DIRECTORY_PATH}/jena_climate.pt",
-    "etth1": f"{WEIGHTS_DIRECTORY_PATH}/etth1.pt",
-    "etth2": f"{WEIGHTS_DIRECTORY_PATH}/etth2.pt",
-    "national_illness": f"{WEIGHTS_DIRECTORY_PATH}/national_illness.pt",
-    "all": f"{WEIGHTS_DIRECTORY_PATH}/all.pt",
+    key: f"{DATA_DIRECTORY_PATH}/model_output/{key}.csv"
+    for key in [
+        f"sequence_{dataset_type}_{metric}_{year_ahead}_{eval_year}"
+        for dataset_type in dataset_types
+        for metric in metrics
+        for year_ahead in years_ahead
+        for eval_year in eval_years
+    ]
 }
 
 
