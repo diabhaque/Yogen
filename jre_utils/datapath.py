@@ -89,14 +89,17 @@ factor_data_paths = {
 }
 
 dataset_types = ["transactions"]
+asset_types = ["land", "building", "condo", "all"]
 metrics = ["median_smoothed", "weighted_median_smoothed"]
 years_ahead = [1, 2]
+eval_years = [2020, 2021]
 
 model_built_data_paths = {
     key: f"{DATA_DIRECTORY_PATH}/model_built/{key}.csv"
     for key in [
-        f"sequence_{dataset_type}_{metric}_{year_ahead}"
+        f"sequence_{dataset_type}_{asset_type}_{metric}_{year_ahead}"
         for dataset_type in dataset_types
+        for asset_type in asset_types
         for metric in metrics
         for year_ahead in years_ahead
     ]
@@ -105,20 +108,20 @@ model_built_data_paths = {
 model_ready_data_paths = {
     key: f"{DATA_DIRECTORY_PATH}/model_ready/{key}.csv"
     for key in [
-        f"sequence_{dataset_type}_{metric}_{year_ahead}"
+        f"sequence_{dataset_type}_{asset_type}_{metric}_{year_ahead}"
         for dataset_type in dataset_types
+        for asset_type in asset_types
         for metric in metrics
         for year_ahead in years_ahead
     ]
 }
 
-eval_years = [2020, 2021]
-
 model_output_data_paths = {
     key: f"{DATA_DIRECTORY_PATH}/model_output/{key}.csv"
     for key in [
-        f"sequence_{dataset_type}_{metric}_{year_ahead}_{eval_year}"
+        f"sequence_{dataset_type}_{asset_type}_{metric}_{year_ahead}_{eval_year}"
         for dataset_type in dataset_types
+        for asset_type in asset_types
         for metric in metrics
         for year_ahead in years_ahead
         for eval_year in eval_years

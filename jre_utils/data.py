@@ -37,10 +37,11 @@ class JapanRETimeSeriesDataset(Dataset):
 
         row = self.df.iloc[idx]
         target = row[self.metrics]
-        area_code, year = row["area_code"], row["year"]
+        area_code, asset_type, year = row["area_code"], row["asset_type"], row["year"]
         area_df = (
             self.complete_df[
                 (self.complete_df["area_code"] == area_code)
+                & (self.complete_df["asset_type"] == asset_type)
                 & (self.complete_df["year"] <= year - self.shift)
             ]
             .sort_values(by="year")
@@ -60,6 +61,7 @@ class JapanRETimeSeriesDataset(Dataset):
             sample = self.transform(sample)
 
         return sample
+
 
 class SKTimeSeriesDataset(Dataset):
     def __init__(
@@ -115,6 +117,7 @@ class SKTimeSeriesDataset(Dataset):
             sample = self.transform(sample)
 
         return sample
+
 
 class TimeSeriesDataset(Dataset):
     def __init__(

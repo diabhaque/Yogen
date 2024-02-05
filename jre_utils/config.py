@@ -9,6 +9,11 @@ asset_types = {
         "metric": "unit_price",
         "metric_pct_chg": "unit_price_pct_chg",
     },
+    "condo": {
+        "label": "Pre-owned Condominiums, etc.",
+        "metric": "unit_price",
+        "metric_pct_chg": "unit_price_pct_chg",
+    },
 }
 
 statistics = {
