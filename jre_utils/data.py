@@ -47,6 +47,7 @@ class JapanRETimeSeriesDataset(Dataset):
             .sort_values(by="year")
             .tail(self.window_length)
         )
+        area_df["time_diff"] = (year - area_df["year"]) / 5
 
         sample = {
             "window": area_df[self.feature_columns].astype(float),
