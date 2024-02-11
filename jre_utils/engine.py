@@ -105,20 +105,20 @@ def evaluate_weighted(model, dataloader, device="cpu"):
     return running_loss / len(dataloader), r2_score.compute().item()
 
 
-def train_weighted_classification(
+def train_classification(
     model, dataloader, optimizer, lr_scheduler, progress_bar=None, device="cpu"
 ):
     model.train()
 
     running_loss = 0.0
-    accuracy = Accuracy().to(device)
+    accuracy = Accuracy(task="multiclass", num_classes=3).to(device)
     criterion = torch.nn.CrossEntropyLoss().to(device)
 
     for batch in dataloader:
         batch = {k: v.to(device) for k, v in batch.items()}
 
         outputs = model(batch["window"], batch["mask"])
-        loss = criterion(outputs, batch["target"])
+        loss = criterion(outputs, batch["target"].squeeze(1).to(torch.long))
 
         optimizer.zero_grad()
         loss.backward()
@@ -134,11 +134,11 @@ def train_weighted_classification(
     return running_loss / len(dataloader), accuracy.compute().item()
 
 
-def evaluate_weighted_classification(model, dataloader, device="cpu"):
+def evaluate_classification(model, dataloader, device="cpu"):
     model.eval()
 
     running_loss = 0.0
-    accuracy = Accuracy().to(device)
+    accuracy = Accuracy(task="multiclass", num_classes=3).to(device)
     criterion = torch.nn.CrossEntropyLoss().to(device)
 
     with torch.no_grad():
@@ -146,7 +146,7 @@ def evaluate_weighted_classification(model, dataloader, device="cpu"):
             batch = {k: v.to(device) for k, v in batch.items()}
 
             outputs = model(batch["window"], batch["mask"])
-            loss = criterion(outputs, batch["target"])
+            loss = criterion(outputs, batch["target"].squeeze(1).to(torch.long))
 
             running_loss += loss.item() * len(batch["window"])
             accuracy.update(outputs.argmax(dim=1), batch["target"].squeeze())
