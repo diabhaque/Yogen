@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
+from scipy.stats import norm
 
 import torch
+import torch.nn.functional as F
 from torch.utils.data import Dataset
 
 
@@ -16,6 +18,7 @@ class JapanRETimeSeriesDataset(Dataset):
         shift=1,
         window_length=5,
         transform=None,
+        type="regression",  # "regression" or "classification"
     ):
         self.feature_columns = (
             feature_columns if feature_columns is not None else df.columns
@@ -27,9 +30,21 @@ class JapanRETimeSeriesDataset(Dataset):
         self.weight_column = weight_column
         self.shift = shift
         self.window_length = window_length
+        self.type = type
 
     def __len__(self):
         return len(self.df)
+
+    def get_class(self, target):
+        n_boundary = norm.ppf(1 / 3)
+        p_boundary = norm.ppf(2 / 3)
+
+        if target < n_boundary:
+            return 0
+        elif target > p_boundary:
+            return 1
+        else:
+            return 2
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
@@ -47,71 +62,19 @@ class JapanRETimeSeriesDataset(Dataset):
             .sort_values(by="year")
             .tail(self.window_length)
         )
-        area_df["time_diff"] = (year - area_df["year"]) / 5
 
         sample = {
             "window": area_df[self.feature_columns].astype(float),
-            "target": target.astype(float),
-            "weight": row[[self.weight_column]].astype(float)
-            if self.weight_column is not None
-            else pd.Series({self.weight_column: 1.0}),
-            # "area_code": area_code,
-        }
-
-        if self.transform:
-            sample = self.transform(sample)
-
-        return sample
-
-
-class SKTimeSeriesDataset(Dataset):
-    def __init__(
-        self,
-        complete_df,
-        df,
-        metrics,
-        weight_column=None,
-        feature_columns=None,
-        shift=1,
-        window_length=5,
-        transform=None,
-    ):
-        self.feature_columns = (
-            feature_columns if feature_columns is not None else df.columns
-        )
-        self.complete_df = complete_df
-        self.df = df
-        self.transform = transform
-        self.metrics = metrics
-        self.weight_column = weight_column
-        self.shift = shift
-        self.window_length = window_length
-
-    def __len__(self):
-        return len(self.df)
-
-    def __getitem__(self, idx):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-
-        row = self.df.iloc[idx]
-        target = row[self.metrics]
-        id, time_idx = row["id"], row["time_idx"]
-        window = (
-            self.complete_df[
-                (self.complete_df["id"] == id)
-                & (self.complete_df["time_idx"] <= time_idx - self.shift)
-            ]
-            .sort_values(by="time_idx")
-            .tail(self.window_length)
-        )
-
-        sample = {
-            "window": window[self.feature_columns],
-            "target": target,
-            "weight": row[[self.weight_column]]
-            if self.weight_column is not None
-            else pd.Series({self.weight_column: 1.0}),
+            "target": (
+                target.astype(float)
+                if self.type == "regression"
+                else target.apply(self.get_class)
+            ),
+            "weight": (
+                row[[self.weight_column]].astype(float)
+                if self.weight_column is not None
+                else pd.Series({self.weight_column: 1.0})
+            ),
         }
 
         if self.transform:
@@ -159,9 +122,11 @@ class TimeSeriesDataset(Dataset):
         sample = {
             "window": window[self.feature_columns],
             "target": target,
-            "weight": row[[self.weight_column]]
-            if self.weight_column is not None
-            else pd.Series({self.weight_column: 1.0}),
+            "weight": (
+                row[[self.weight_column]]
+                if self.weight_column is not None
+                else pd.Series({self.weight_column: 1.0})
+            ),
         }
 
         if self.transform:

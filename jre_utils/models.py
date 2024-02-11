@@ -2,6 +2,7 @@ import math
 
 import torch
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 
 class PositionalEncoding(torch.nn.Module):
@@ -35,7 +36,7 @@ class TimeSeriesTransformerModel(torch.nn.Module):
         nhead: int,
         d_hid: int,
         nlayers: int,
-        target_size: int = 1, 
+        target_size: int = 1,
         dropout: float = 0.1,
         enc_dropout: float = 0.1,
         device: str = "cpu",
@@ -58,8 +59,8 @@ class TimeSeriesTransformerModel(torch.nn.Module):
     def forward(self, window: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
         """
         Arguments:
-            src: Tensor, shape ``[batch_size, seq_len, n_features]`` -> ``[seq_len, batch_size, n_features]``
-            src_mask: Tensor, shape ``[batch_size, seq_len]``
+            window: Tensor, shape ``[batch_size, seq_len, n_features]`` -> ``[seq_len, batch_size, n_features]``
+            mask: Tensor, shape ``[batch_size, seq_len]``
 
         Returns:
             output: Tensor, shape ``[batch_size, 1]``
@@ -71,3 +72,59 @@ class TimeSeriesTransformerModel(torch.nn.Module):
         pooled_output = torch.mean(output_layer, dim=0)
         final_output = self.linear(pooled_output)
         return final_output
+
+
+class TimeSeriesLSTMModel(torch.nn.Module):
+    def __init__(
+        self,
+        n_features,
+        d_hid,
+        nlayers=1,
+        dropout=0.0,
+        device="cpu",
+    ):
+        super(TimeSeriesLSTMModel, self).__init__()
+        # Attributes
+        self.n_features = n_features
+        self.d_hid = d_hid
+        self.num_layers = nlayers
+        self.device = device
+
+        # LSTM Layer
+        self.lstm = torch.nn.LSTM(
+            input_size=n_features,
+            hidden_size=d_hid,
+            num_layers=nlayers,
+            dropout=dropout,
+            batch_first=True,
+        )
+
+        # Fully connected layer
+        self.linear = torch.nn.Linear(d_hid, 1)
+
+    def forward(self, x, mask):
+        """
+        Arguments:
+            window: Tensor, shape ``[batch_size, seq_len, n_features]`` -> ``[seq_len, batch_size, n_features]``
+            mask: Tensor, shape ``[batch_size, seq_len]``
+
+        Returns:
+            output: Tensor, shape ``[batch_size, 1]``
+        """
+        lengths = mask.sum(dim=1).to(dtype=torch.int64).cpu()
+
+        # Pack the sequence
+        packed_input = pack_padded_sequence(
+            x, lengths, batch_first=True, enforce_sorted=False
+        )
+
+        # Pass the packed sequence through the lstm
+        packed_output, (hidden, cell) = self.lstm(packed_input)
+
+        # Unpack the sequence
+        output, input_sizes = pad_packed_sequence(packed_output, batch_first=True)
+
+        # We use the last hidden state to make the prediction
+        # You may want to modify this if you need the output at all time steps
+        last_seq_items = output[range(len(output)), lengths - 1, :]
+        return self.linear(last_seq_items)
