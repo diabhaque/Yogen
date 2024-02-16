@@ -73,7 +73,3 @@ def predict_returns(model, complete_df, prediction_df, feature_columns, device="
         ),
         axis=1,
     )
-
-
-def predict_returns_unknown():
-    pass
