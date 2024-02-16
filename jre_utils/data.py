@@ -147,24 +147,6 @@ class ToNumpy(object):
         }
 
 
-class ToTensor(object):
-    """Convert ndarrays in sample to Tensors."""
-
-    def __call__(self, sample):
-        window, target, mask, weight = (
-            sample["window"],
-            sample["target"],
-            sample["mask"],
-            sample["weight"],
-        )
-        return {
-            "window": torch.from_numpy(window).to(torch.float32),
-            "mask": torch.from_numpy(mask).to(torch.float32),
-            "target": torch.from_numpy(target).to(torch.float32),
-            "weight": torch.from_numpy(weight).to(torch.float32),
-        }
-
-
 class PadAndMask(object):
     """Pad all inputs to be of the same length and create a mask"""
 
@@ -186,4 +168,22 @@ class PadAndMask(object):
             "mask": mask,
             "target": target,
             "weight": weight,
+        }
+
+
+class ToTensor(object):
+    """Convert ndarrays in sample to Tensors."""
+
+    def __call__(self, sample):
+        window, target, mask, weight = (
+            sample["window"],
+            sample["target"],
+            sample["mask"],
+            sample["weight"],
+        )
+        return {
+            "window": torch.from_numpy(window).to(torch.float32),
+            "mask": torch.from_numpy(mask).to(torch.float32),
+            "target": torch.from_numpy(target).to(torch.float32),
+            "weight": torch.from_numpy(weight).to(torch.float32),
         }

@@ -1,7 +1,3 @@
-import math
-import pandas as pd
-
-
 def get_most_active_municipalities(df, n=500, keep=[]):
     most_active_areas = (
         df.groupby("area_code")
