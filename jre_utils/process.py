@@ -17,7 +17,7 @@ def get_cumulative_growth(df, column):
 
 def get_cumulative_growth_from_base(df, column):
     df = df.sort_values(by=["year", "area_code"], ascending=[True, True])
-    df[f"{column}_yoy_growth"] = df.groupby("area_code")[column].pct_change(periods=1)
+    df[f"{column}_yoy_growth"] = df.groupby("area_code")[column].pct_change(periods=1).fillna(0)
     return get_cumulative_growth(df, f"{column}_yoy_growth")
 
 

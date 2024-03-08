@@ -90,7 +90,7 @@ factor_data_paths = {
 
 dataset_types = ["transactions"]
 asset_types = ["land", "building", "condo", "all"]
-metrics = ["median", "weighted_median", "median_smoothed", "weighted_median_smoothed"]
+metrics = ["gmean", "median", "weighted_median", "median_smoothed", "weighted_median_smoothed"]
 years_ahead = [1, 2]
 eval_years = [2020, 2021]
 years = [year for year in range(2007, 2025)]
