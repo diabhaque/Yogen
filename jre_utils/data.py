@@ -6,6 +6,8 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 
+from jre_utils.process import get_window
+
 
 class JapanRESpatialTimeSeriesDataset(Dataset):
     def __init__(
@@ -61,13 +63,9 @@ class JapanRESpatialTimeSeriesDataset(Dataset):
         row = self.df.iloc[idx]
         target = row[self.metrics]
         area_code, year = row["area_code"], row["year"]
-        area_df = (
-            self.complete_df[
-                (self.complete_df["area_code"] == area_code)
-                & (self.complete_df["year"] <= year - self.shift)
-            ]
-            .sort_values(by="year")
-            .tail(self.window_length)
+
+        area_df = get_window(
+            self.complete_df, area_code, year - self.shift, self.window_length
         )
 
         area_df["building"] = self.asset_type == "building"
@@ -79,13 +77,8 @@ class JapanRESpatialTimeSeriesDataset(Dataset):
         # add all features from 5 nearest neighbours
         neighbours = self.neighbours_dictionary[area_code]
         for i, (neighbour, distance) in enumerate(neighbours.items()):
-            neighbour_df = (
-                self.complete_df[
-                    (self.complete_df["area_code"] == neighbour)
-                    & (self.complete_df["year"] <= year - self.shift)
-                ]
-                .sort_values(by="year")
-                .tail(self.window_length)
+            neighbour_df = get_window(
+                self.complete_df, neighbour, year - self.shift, self.window_length
             )
             neighbour_df = neighbour_df[self.neighbour_feature_columns + ["year"]]
             neighbour_df = neighbour_df.astype(float)
@@ -169,13 +162,8 @@ class JapanRETimeSeriesDataset(Dataset):
         row = self.df.iloc[idx]
         target = row[self.metrics]
         area_code, year = row["area_code"], row["year"]
-        area_df = (
-            self.complete_df[
-                (self.complete_df["area_code"] == area_code)
-                & (self.complete_df["year"] <= year - self.shift)
-            ]
-            .sort_values(by="year")
-            .tail(self.window_length)
+        area_df = get_window(
+            self.complete_df, area_code, year - self.shift, self.window_length
         )
 
         area_df["building"] = self.asset_type == "building"
