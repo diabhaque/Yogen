@@ -2,9 +2,8 @@ import pandas as pd
 import numpy as np
 
 from torchvision import transforms
-from torch.utils.data import DataLoader
 
-from jre_utils.data import JapanRETimeSeriesDataset, PadAndMask, ToNumpy, ToTensor
+from jre_utils.data import PadAndMask, ToNumpy, ToTensor
 
 
 class Portfolio:
@@ -33,7 +32,7 @@ class Timeline:
         self.curve[year] = portfolio
         self.current_year = year
 
-    def remark(self, year, current_year_df):
+    def remark(self, year, current_year_df, metric):
         portfolio = self.get_current_portfolio()
         assets, liabilities, cash = (
             portfolio.assets,
@@ -42,14 +41,12 @@ class Timeline:
         )
 
         remarked_assets = {
-            area_code: value
-            * (1 + current_year_df.loc[area_code, "yearly_price_growth"])
+            area_code: value * (1 + current_year_df.loc[area_code, metric])
             for area_code, value in assets.items()
         }
 
         remarked_liabiities = {
-            area_code: value
-            * (1 + current_year_df.loc[area_code, "yearly_price_growth"])
+            area_code: value * (1 + current_year_df.loc[area_code, metric])
             for area_code, value in liabilities.items()
         }
 
@@ -92,50 +89,46 @@ class Timeline:
         returns = np.diff(navs) / navs[:-1]
         return (np.mean(returns) - risk_free_rate) / np.std(returns)
 
-    def calculate_asset_rebalancing_ratio(self):
+    def calculate_rebalancing_ratio(self, item="assets"):
         rebalancing_ratios = []
         for y1, y2 in zip(self.rebalancing_years, self.rebalancing_years[1:]):
-            y1_assets = self.curve[y1].assets.keys()
-            y2_assets = self.curve[y2].assets.keys()
 
-            maintained_assets = [
-                y1_asset for y1_asset in y1_assets if y1_asset in y2_assets
-            ]
-            rebalancing_ratio = 1 - len(maintained_assets) / len(y1_assets)
+            y1_items = getattr(self.curve[y1], item).keys()
+            y2_items = getattr(self.curve[y2], item).keys()
+
+            maintained_assets = [y1_item for y1_item in y1_items if y1_item in y2_items]
+            rebalancing_ratio = 1 - len(maintained_assets) / len(y1_items)
             rebalancing_ratios.append((y2, rebalancing_ratio))
             print(f"{y2} Rebalancing ratio: {rebalancing_ratio:.2f}")
 
         return rebalancing_ratios
 
-    def calculate_liabilities_rebalancing_ratio(self):
-        rebalancing_ratios = []
-        for y1, y2 in zip(self.rebalancing_years, self.rebalancing_years[1:]):
-            y1_liabilities = self.curve[y1].liabilities.keys()
-            y2_liabilities = self.curve[y2].liabilities.keys()
+    def get_navs(self):
+        return {year: portfolio.nav() for year, portfolio in self.curve.items()}
 
-            maintained_assets = [
-                y1_liability
-                for y1_liability in y1_liabilities
-                if y1_liability in y2_liabilities
-            ]
-            rebalancing_ratio = 1 - len(maintained_assets) / len(y1_liabilities)
-            rebalancing_ratios.append((y2, rebalancing_ratio))
-            print(f"{y2} Rebalancing ratio: {rebalancing_ratio:.2f}")
-
-        return rebalancing_ratios
+    def get_cumulative_returns(self):
+        timeline = sorted(self.curve.items(), key=lambda x: x[0])
+        initial_nav = timeline[0][1].nav()
+        return {
+            year: portfolio.nav() / initial_nav
+            for year, portfolio in self.curve.items()
+        }
 
 
 def predict_periodic_return(
     model, df, area_code, year, asset_type, feature_columns, device="cpu"
 ):
-    sample = {
-        "window": df[
-            (df["area_code"] == area_code)
-            & (df["asset_type"] == asset_type)
-            & (df["year"] <= year - 2)
-        ]
+    area_df = (
+        df[(df["area_code"] == area_code) & (df["year"] <= year - 2)]
         .sort_values(by="year")
-        .tail(5)[feature_columns],
+        .tail(5)
+    )
+    area_df["building"] = asset_type == "building"
+    area_df["land"] = asset_type == "land"
+    area_df["condo"] = asset_type == "condo"
+
+    sample = {
+        "window": area_df[feature_columns].astype(float),
         "target": pd.DataFrame(),
         "weight": pd.DataFrame(),
     }
@@ -150,14 +143,16 @@ def predict_periodic_return(
     return output.item()
 
 
-def predict_returns(model, complete_df, prediction_df, feature_columns, device="cpu"):
+def predict_returns(
+    model, complete_df, prediction_df, asset_type, feature_columns, device="cpu"
+):
     return prediction_df.apply(
         lambda row: predict_periodic_return(
             model,
             complete_df,
             row["area_code"],
             row["year"],
-            row["asset_type"],
+            asset_type,
             feature_columns,
             device,
         ),

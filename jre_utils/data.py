@@ -7,14 +7,17 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 
 
-class JapanRETimeSeriesDataset(Dataset):
+class JapanRESpatialTimeSeriesDataset(Dataset):
     def __init__(
         self,
         complete_df,
         df,
         metrics,
+        neighbours_dictionary,
+        asset_type="building",  # building or land or condo
         weight_column=None,
         feature_columns=None,
+        neighbour_feature_columns=None,
         shift=1,
         window_length=5,
         transform=None,
@@ -23,10 +26,15 @@ class JapanRETimeSeriesDataset(Dataset):
         self.feature_columns = (
             feature_columns if feature_columns is not None else df.columns
         )
+        self.neighbour_feature_columns = (
+            neighbour_feature_columns if neighbour_feature_columns is not None else []
+        )
         self.complete_df = complete_df
         self.df = df
+        self.neighbours_dictionary = neighbours_dictionary
         self.transform = transform
         self.metrics = metrics
+        self.asset_type = asset_type
         self.weight_column = weight_column
         self.shift = shift
         self.window_length = window_length
@@ -52,16 +60,127 @@ class JapanRETimeSeriesDataset(Dataset):
 
         row = self.df.iloc[idx]
         target = row[self.metrics]
-        area_code, asset_type, year = row["area_code"], row["asset_type"], row["year"]
+        area_code, year = row["area_code"], row["year"]
         area_df = (
             self.complete_df[
                 (self.complete_df["area_code"] == area_code)
-                & (self.complete_df["asset_type"] == asset_type)
                 & (self.complete_df["year"] <= year - self.shift)
             ]
             .sort_values(by="year")
             .tail(self.window_length)
         )
+
+        area_df["building"] = self.asset_type == "building"
+        area_df["land"] = self.asset_type == "land"
+        area_df["condo"] = self.asset_type == "condo"
+
+        area_df = area_df[self.feature_columns + ["year"]].astype(float)
+
+        # add all features from 5 nearest neighbours
+        neighbours = self.neighbours_dictionary[area_code]
+        for i, (neighbour, distance) in enumerate(neighbours.items()):
+            neighbour_df = (
+                self.complete_df[
+                    (self.complete_df["area_code"] == neighbour)
+                    & (self.complete_df["year"] <= year - self.shift)
+                ]
+                .sort_values(by="year")
+                .tail(self.window_length)
+            )
+            neighbour_df = neighbour_df[self.neighbour_feature_columns + ["year"]]
+            neighbour_df = neighbour_df.astype(float)
+            neighbour_df[f"distance_n{i}"] = distance
+
+            area_df = area_df.merge(
+                neighbour_df,
+                on=["year"],
+                how="left",
+                suffixes=("", f"_n{i}"),
+            )
+
+            # left merge causes nan values, fill them with 0
+            area_df = area_df.fillna(0)
+
+        sample = {
+            "window": area_df.drop(columns=["year"]),
+            "target": (
+                target.astype(float)
+                if self.type == "regression"
+                else target.apply(self.get_class)
+            ),
+            "weight": (
+                row[[self.weight_column]].astype(float)
+                if self.weight_column is not None
+                else pd.Series({self.weight_column: 1.0})
+            ),
+        }
+
+        if self.transform:
+            sample = self.transform(sample)
+
+        return sample
+
+
+class JapanRETimeSeriesDataset(Dataset):
+    def __init__(
+        self,
+        complete_df,
+        df,
+        metrics,
+        weight_column=None,
+        asset_type="building",  # building or land or condo
+        feature_columns=None,
+        shift=1,
+        window_length=5,
+        transform=None,
+        type="regression",  # "regression" or "classification"
+    ):
+        self.feature_columns = (
+            feature_columns if feature_columns is not None else df.columns
+        )
+        self.complete_df = complete_df
+        self.df = df
+        self.transform = transform
+        self.metrics = metrics
+        self.weight_column = weight_column
+        self.asset_type = asset_type
+        self.shift = shift
+        self.window_length = window_length
+        self.type = type
+
+    def __len__(self):
+        return len(self.df)
+
+    def get_class(self, target):
+        n_boundary = norm.ppf(1 / 3)
+        p_boundary = norm.ppf(2 / 3)
+
+        if target < n_boundary:
+            return 0
+        elif target > p_boundary:
+            return 1
+        else:
+            return 2
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        row = self.df.iloc[idx]
+        target = row[self.metrics]
+        area_code, year = row["area_code"], row["year"]
+        area_df = (
+            self.complete_df[
+                (self.complete_df["area_code"] == area_code)
+                & (self.complete_df["year"] <= year - self.shift)
+            ]
+            .sort_values(by="year")
+            .tail(self.window_length)
+        )
+
+        area_df["building"] = self.asset_type == "building"
+        area_df["land"] = self.asset_type == "land"
+        area_df["condo"] = self.asset_type == "condo"
 
         sample = {
             "window": area_df[self.feature_columns].astype(float),
