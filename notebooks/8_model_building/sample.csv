@@ -1,0 +1,6 @@
+year,area_code,building_unit_price_gmean_pct_chg_normalized_yearly,population_log_normalized_yearly,taxable_income_growth,taxable_income_per_taxpayer_growth,net_migration_ratio,new_dwellings_ratio,taxpayer_count_growth
+2015,13102,0.625,1.095,0.055,0.003,0.025,0.028,0.052
+2016,13102,0.388,1.11,0.082,0.038,0.032,0.071,0.042
+2017,13102,0.43,1.13,0.082,0.027,0.033,0.024,0.054
+2018,13102,0.422,1.151,0.076,0.02,0.024,0.045,0.055
+2019,13102,-0.002,1.166,0.108,0.066,0.024,0.018,0.039
