@@ -26,7 +26,10 @@ def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device=
         lr_scheduler.step()
 
         running_loss += loss.item() * len(batch)
-        r2_score.update(outputs, batch["target"])
+        r2_score.update(
+            outputs[:, 0].unsqueeze(1).to(device),
+            batch["target"][:, 0].unsqueeze(1).to(device),  # get the first column
+        )
 
         if progress_bar is not None:
             progress_bar.update(1)
@@ -35,6 +38,7 @@ def train(model, dataloader, optimizer, lr_scheduler, progress_bar=None, device=
 
 
 def evaluate(model, dataloader, device="cpu"):
+    # outputs can have multiple dimensions, R2_score is computed only for the first column
     model.eval()
 
     running_loss = 0.0
@@ -49,7 +53,10 @@ def evaluate(model, dataloader, device="cpu"):
             loss = mse_loss(outputs, batch["target"])
 
             running_loss += loss.item() * len(batch)
-            r2_score.update(outputs, batch["target"])
+            r2_score.update(
+                outputs[:, 0].unsqueeze(1).to(device),
+                batch["target"][:, 0].unsqueeze(1).to(device),  # get the first column
+            )
 
     return running_loss / len(dataloader), r2_score.compute().item()
 
@@ -77,7 +84,10 @@ def train_weighted(
         lr_scheduler.step()
 
         running_loss += loss.item() * len(batch)
-        r2_score.update(outputs, batch["target"])
+        r2_score.update(
+            outputs[:, 0].unsqueeze(1).to(device),
+            batch["target"][:, 0].unsqueeze(1).to(device),  # get the first column
+        )
 
         if progress_bar is not None:
             progress_bar.update(1)
@@ -100,7 +110,10 @@ def evaluate_weighted(model, dataloader, device="cpu"):
             loss = mse_loss_weighted(outputs, batch["target"], batch["weight"])
 
             running_loss += loss.item() * len(batch)
-            r2_score.update(outputs, batch["target"])
+            r2_score.update(
+                outputs[:, 0].unsqueeze(1).to(device),
+                batch["target"][:, 0].unsqueeze(1).to(device),  # get the first column
+            )
 
     return running_loss / len(dataloader), r2_score.compute().item()
 
