@@ -3,6 +3,7 @@ WEIGHTS_DIRECTORY_PATH = "../../weights"
 
 PRETRAINING_DATA_PATH = f"{DATA_DIRECTORY_PATH}/pretraining"
 
+PRICE_INDEX_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived/price_index"
 DERIVED_DATA_PATH = f"{DATA_DIRECTORY_PATH}/derived/transactions"
 DERIVED_DATA_PATH_LPA = f"{DATA_DIRECTORY_PATH}/derived/lpa"
 DERIVED_DATA_PATH_PLPS = f"{DATA_DIRECTORY_PATH}/derived/plps"
@@ -90,10 +91,10 @@ factor_data_paths = {
 
 dataset_types = ["transactions"]
 asset_types = ["land", "building", "condo", "combined", "all"]
-metrics = ["gmean", "median"]
-years_ahead = [1, 2]
+metrics = ["gmean", "median", "robust", "ols"]
+years_ahead = list(range(1, 6))
 eval_years = [2020, 2021]
-years = [year for year in range(2007, 2025)]
+years = list(range(2007, 2025))
 
 model_built_data_paths = {
     key: f"{DATA_DIRECTORY_PATH}/model_built/{key}.csv"
@@ -138,6 +139,11 @@ def get_derived_csv_path_legacy(asset_type):
 def get_derived_csv_path(asset_type):
     filename = f"{asset_type}.csv"
     return f"{DERIVED_DATA_PATH}/{filename}"
+
+
+def get_price_index_path(asset_type):
+    filename = f"{asset_type}.csv"
+    return f"{PRICE_INDEX_DATA_PATH}/{filename}"
 
 
 def get_derived_plps_path():

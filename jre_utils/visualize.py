@@ -15,12 +15,17 @@ def plot_time_series(
     showlegend=True,
     highlight=False,
     highlight_range=("2020", "2022"),
+    color_discrete_map={},
 ):
     plot_df = df.set_index(group_by_columns)
     plot_df = plot_df[column].unstack(list(range(len(granularity_columns))))
     plot_df.columns = [f"{a}" for a in plot_df.columns]
 
     fig = px.line(plot_df, y=plot_df.columns, title=title)
+
+    for trace in fig.data:
+        if color_discrete_map.get(trace.name) is not None:
+            trace.line.color = color_discrete_map[trace.name]
 
     fig.update_traces(mode="lines+markers", visible=visible)
     fig.update_layout(

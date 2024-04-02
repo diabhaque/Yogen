@@ -1,7 +1,12 @@
 import math
 
 import torch
-from torch.nn import TransformerEncoder, TransformerEncoderLayer
+from torch.nn import (
+    TransformerEncoder,
+    TransformerEncoderLayer,
+    TransformerDecoder,
+    TransformerDecoderLayer,
+)
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 
@@ -69,6 +74,54 @@ class TimeSeriesTransformerModel(torch.nn.Module):
         window = self.embedding(window)
         window = self.pos_encoder(window)
         output_layer = self.transformer_encoder(window, src_key_padding_mask=mask)
+        pooled_output = torch.mean(output_layer, dim=0)
+        final_output = self.linear(pooled_output)
+        return final_output
+
+
+class TimeSeriesTransformerDecoderModel(torch.nn.Module):
+    def __init__(
+        self,
+        n_features: int,
+        d_model: int,
+        nhead: int,
+        d_hid: int,
+        nlayers: int,
+        target_size: int = 1,
+        dropout: float = 0.1,
+        enc_dropout: float = 0.1,
+        device: str = "cpu",
+    ):
+        super().__init__()
+        self.d_model = d_model
+        self.embedding = torch.nn.Linear(n_features, d_model)
+        self.pos_encoder = PositionalEncoding(d_model, dropout=enc_dropout)
+        self.transformer_decoder = TransformerDecoder(
+            TransformerDecoderLayer(d_model, nhead, d_hid, dropout), nlayers
+        )
+        self.linear = torch.nn.Linear(d_model, target_size)
+        self.device = device
+
+    def init_weights(self) -> None:
+        initrange = 0.1
+        self.linear.bias.data.zero_()
+        self.linear.weight.data.uniform_(-initrange, initrange)
+
+    def forward(self, window: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+        """
+        Arguments:
+            window: Tensor, shape ``[batch_size, seq_len, n_features]`` -> ``[seq_len, batch_size, n_features]``
+            mask: Tensor, shape ``[batch_size, seq_len]``
+
+        Returns:
+            output: Tensor, shape ``[batch_size, 1]``
+        """
+        window = window.permute(1, 0, 2)
+        window = self.embedding(window)
+        window = self.pos_encoder(window)
+        output_layer = self.transformer_decoder(
+            window, memory=window, tgt_key_padding_mask=mask
+        )
         pooled_output = torch.mean(output_layer, dim=0)
         final_output = self.linear(pooled_output)
         return final_output
