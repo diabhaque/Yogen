@@ -15,6 +15,7 @@ def plot_time_series(
     showlegend=True,
     highlight=False,
     highlight_range=("2020", "2022"),
+    highlight_color="LightSalmon",
     color_discrete_map={},
 ):
     plot_df = df.set_index(group_by_columns)
@@ -39,7 +40,7 @@ def plot_time_series(
         fig.add_vrect(
             x0=highlight_range[0],
             x1=highlight_range[1],
-            fillcolor="LightSalmon",
+            fillcolor=highlight_color,
             opacity=0.5,
             layer="below",
             line_width=0,
