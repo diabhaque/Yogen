@@ -69,3 +69,4 @@ notebooks/8_model_building/regression_transformer.ipynb
 notebooks/8_model_building/regression_transformer_spatial.ipynb
 notebooks/9_incremental_training/regression_lstm.ipynb
 notebooks/9_incremental_training/regression_transformer.ipynb
+notebooks/9_incremental_training/regression_transformer_loop.ipynb

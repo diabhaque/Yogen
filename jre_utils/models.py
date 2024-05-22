@@ -74,8 +74,9 @@ class TimeSeriesTransformerModel(torch.nn.Module):
         window = self.embedding(window)
         window = self.pos_encoder(window)
         output_layer = self.transformer_encoder(window, src_key_padding_mask=mask)
-        pooled_output = torch.mean(output_layer, dim=0)
-        final_output = self.linear(pooled_output)
+        # pooled_output = torch.mean(output_layer, dim=0)
+        final_output_vector = output_layer[-1, :, :]
+        final_output = self.linear(final_output_vector)
         return final_output
 
 
